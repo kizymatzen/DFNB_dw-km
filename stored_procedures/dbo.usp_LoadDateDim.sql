@@ -13,22 +13,22 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE PROCEDURE [dbo].[usp_LoadDateDim] (@v_num_years as INT)
+--CREATE PROCEDURE [dbo].[usp_LoadDateDim] (@v_num_years as INT)
+
+CREATE PROCEDURE [dbo].[usp_LoadDateDim] (@v_num_days as INT)
 AS
 BEGIN
 /*****************************************************************************************************************
 NAME:    dbo.usp_LoadDateDim
 PURPOSE: Load the Date Dimension table
 
-SUPPORT: Jaussi Consulting LLC
-         www.jaussiconsulting.net
-         jon@jaussiconsulting.net
+SUPPORT: Kizy Matzenbacher
+		 kizymatzen@gmail.com
 
 MODIFICATION LOG:
 Ver       Date         Author       Description
 -------   ----------   ----------   -----------------------------------------------------------------------------
-1.0       11/17/2019   JJAUSSI      1. Built this starter script for LDS BC IT 243
-
+1.0       03/20/2020   KMATZEN      1. Enhance with @v_num_days for better precision
 
 RUNTIME: 
 1 sec
@@ -104,7 +104,6 @@ SET @v_first_date = '1849-12-31'
 -- 2) Reload the base data
 
 TRUNCATE TABLE dbo.DateDim;
-
 INSERT INTO dbo.DateDim
 SELECT CONVERT(VARCHAR, (@v_first_date + n.n), 112) AS date_id
      , FORMAT((@v_first_date + n.n), 'yyyy-MM-dd') AS day_date
@@ -151,7 +150,8 @@ SELECT CONVERT(VARCHAR, (@v_first_date + n.n), 112) AS date_id
      , NULL AS holiday_ind -- Challenge field
      , NULL AS holiday_name -- Challenge field
   FROM dbo.Nums AS n
-  WHERE n.n <= (365 * @v_num_years)
+  --WHERE n.n <= (365 * @v_num_years)
+  WHERE n.n <= (@v_num_days + 1)
   ORDER BY 1;
 
 
