@@ -118,10 +118,13 @@ SELECT CONVERT(VARCHAR, (@v_first_date + n.n), 112) AS date_id
      , CONVERT(VARCHAR, DATEADD(dd, -(DATEPART(dw, (@v_first_date + n.n)) - 1), (@v_first_date + n.n)), 112) AS week_start_date_id
      , FORMAT(DATEADD(dd, 7 - DATEPART(dw, (@v_first_date + n.n)), (@v_first_date + n.n)), 'yyyy-MM-dd') AS week_end_date
      , CONVERT(VARCHAR, DATEADD(dd, 7 - DATEPART(dw, (@v_first_date + n.n)), (@v_first_date + n.n)), 112) AS week_end_date_id
-     , NULL AS weekday_flag
+     ,  CASE
+           WHEN DATEPART(dw, @_first_date + n.n) IN(6, 7)
+           THEN 0
+           ELSE 1
      , NULL AS weekend_flag
      , NULL AS last_day_in_week_flag
-     , NULL AS month_number
+     , DATEPART (mm, @v_first_date + n.n) AS month_number
      , NULL AS month_name
      , NULL AS month_abbreviation
      , NULL AS month_last_day_number
