@@ -22,7 +22,7 @@ PURPOSE: Create and Load dbo.usp_LoadProductDim procedure
 MODIFICATION LOG:
 Ver      Date        Author        Description
 -----   ----------   -----------   -------------------------------------------------------------------------------
-1.0     04/02/2021   KMATZEN       1. Built this table for LDS BC IT243
+1.0     04/06/2021   KMATZEN       1. Built this table for LDS BC IT243
 
 
 
@@ -47,16 +47,18 @@ EXEC dbo.usp_LoadProductDim
 ******************************************************************************************************************/
 BEGIN
 
-TRUNCATE TABLE dbo.tblProductDim;
+    TRUNCATE TABLE dbo.tblProductDim;
 
-INSERT INTO dbo.tblProductDim
-SELECT DISTINCT 
-       s.prod_id
-     , 'Unknown' AS prod_desc
-  FROM dbo.stg_p1 AS s
- ORDER BY 1;
+    INSERT INTO dbo.tblProductDim
+    SELECT DISTINCT 
+           s.prod_id
+         , prod_code
+         , prod_desc
+      FROM dbo.stg_p1 AS s
+           INNER JOIN
+           stg.PRODUCT_PROFILES AS p ON s.prod_id = p.prod_id
+     ORDER BY 1;
 
-   END;
-
+END;
 
 GO
